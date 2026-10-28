@@ -11,6 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Unzip project
+        run: unzip -q .github/workflows/DiceLeague-final.zip -d src
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -21,12 +24,13 @@ jobs:
           gradle-version: 8.7
 
       - name: Build release APK
-        run: gradle assembleRelease --no-daemon --stacktrace
+        working-directory: src/DiceLeague
+        run: gradle assembleRelease --no-daemon --console=plain
 
       - name: Rename APK
         run: |
           mkdir -p dist
-          cp app/build/outputs/apk/release/*.apk dist/DiceLeague.apk
+          cp src/DiceLeague/app/build/outputs/apk/release/*.apk dist/DiceLeague.apk
 
       - uses: actions/upload-artifact@v4
         with:
